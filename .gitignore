@@ -1,0 +1,11 @@
+# Bazel output + symlinks
+/bazel-*
+/bazel-bin
+/bazel-out
+/bazel-testlogs
+
+# Bazel cache (optional, usually outside repo but safe to ignore)
+.bazel-cache
+.bazelrc.user
+
+compile_commands.json

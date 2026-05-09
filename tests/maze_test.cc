@@ -10,3 +10,11 @@ TEST(MazeTest, Initialization) {
   EXPECT_EQ(my_maze.GetRows(), expected_rows);
   EXPECT_EQ(my_maze.GetCols(), expected_cols);
 }
+
+TEST(MazeTest, IsConnected) {
+  int expected_cells_side = 2;
+
+  maze::Maze my_maze(expected_cells_side, expected_cells_side);
+  EXPECT_EQ(my_maze.GetRows(), expected_cells_side);
+  EXPECT_EQ(my_maze.GetCols(), expected_cells_side);
+}

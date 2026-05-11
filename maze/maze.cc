@@ -2,7 +2,28 @@
 
 #include <algorithm>
 
-bool maze::Maze::IsConnected(int cell_a, int cell_b) const {
-  return std::ranges::find(graph_[cell_a], cell_b) !=
-         std::ranges::end(graph_[cell_a]);
+bool maze::Maze::IsConnected(const Cell& cell_a, const Cell& cell_b) const {
+  if (internal::OutOfBounds(cell_a, GetRows(), GetCols()) ||
+      internal::OutOfBounds(cell_b, GetRows(), GetCols())) {
+    return false;
+  }
+
+  const int cell_a_idx = internal::ToFlatIdx(cell_a, GetRows());
+  const int cell_b_idx = internal::ToFlatIdx(cell_b, GetRows());
+
+  return std::ranges::find_if(graph_[cell_a_idx],
+                              [cell_b_idx](const auto& edge) {
+                                return std::get<0>(edge) == cell_b_idx;
+                              }) != std::ranges::end(graph_[cell_a_idx]);
+}
+
+int maze::internal::ToFlatIdx(const Cell& cell, int total_rows) {
+  const auto& [row, col] = cell;
+  return row * total_rows + col;
+}
+
+bool maze::internal::OutOfBounds(const Cell& cell, int total_rows,
+                                 int total_cols) {
+  const auto& [row, col] = cell;
+  return row < 0 || row >= total_rows || col < 0 || col >= total_cols;
 }

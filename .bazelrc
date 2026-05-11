@@ -1,0 +1,9 @@
+# C++20 for all builds
+build --cxxopt=-std=c++20
+
+# Define the 'asan' config
+build:asan --strip=never
+build:asan --copt -fsanitize=address
+build:asan --copt -fno-omit-frame-pointer
+build:asan --copt -g
+build:asan --linkopt -fsanitize=address

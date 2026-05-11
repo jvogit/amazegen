@@ -4,6 +4,8 @@ cc_library(
     name = "maze",
     srcs = glob(["*.cc"]),
     hdrs = glob(["*.h"]),
-    copts = ["-std=c++20"],
     visibility = ["//visibility:public"],
+    deps = [
+        "@abseil-cpp//absl/log:check",
+    ],
 )

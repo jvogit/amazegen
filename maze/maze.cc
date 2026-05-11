@@ -8,8 +8,8 @@ bool maze::Maze::IsConnected(const Cell& cell_a, const Cell& cell_b) const {
     return false;
   }
 
-  const int cell_a_idx = internal::ToFlatIdx(cell_a, GetRows());
-  const int cell_b_idx = internal::ToFlatIdx(cell_b, GetRows());
+  const int cell_a_idx = internal::ToFlatIdx(cell_a, GetCols());
+  const int cell_b_idx = internal::ToFlatIdx(cell_b, GetCols());
 
   return std::ranges::find_if(graph_[cell_a_idx],
                               [cell_b_idx](const auto& edge) {
@@ -17,9 +17,9 @@ bool maze::Maze::IsConnected(const Cell& cell_a, const Cell& cell_b) const {
                               }) != std::ranges::end(graph_[cell_a_idx]);
 }
 
-int maze::internal::ToFlatIdx(const Cell& cell, int total_rows) {
+int maze::internal::ToFlatIdx(const Cell& cell, int total_cols) {
   const auto& [row, col] = cell;
-  return row * total_rows + col;
+  return row * total_cols + col;
 }
 
 bool maze::internal::OutOfBounds(const Cell& cell, int total_rows,

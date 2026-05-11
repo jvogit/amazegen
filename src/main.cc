@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include "absl/log/check.h"
-#include "maze/maze.h"
+#include "maze/randomizer.h"
 
 namespace {
 void render(std::ostream& os, maze::Maze& maze) {
@@ -46,7 +46,8 @@ void render(std::ostream& os, maze::Maze& maze) {
 }  // namespace
 
 int main() {
-  maze::Maze my_maze(3, 4);
+  std::mt19937 testgen(123456);
+  maze::Maze my_maze = maze::Prim::RandomizeMaze(17, 38, testgen);
 
   std::cout << "Rows: " << my_maze.GetRows() << " Cols: " << my_maze.GetCols()
             << "\n";

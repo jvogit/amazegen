@@ -37,7 +37,7 @@ class Maze {
 
 namespace maze::internal {
 
-int ToFlatIdx(const Cell& cell, int total_rows);
+int ToFlatIdx(const Cell& cell, int total_cols);
 bool OutOfBounds(const Cell& cell, int total_rows, int total_cols);
 
 }  // namespace maze::internal

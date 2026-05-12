@@ -1,5 +1,8 @@
 #include <iostream>
+#include <random>
 
+#include "absl/flags/flag.h"
+#include "absl/flags/parse.h"
 #include "absl/log/check.h"
 #include "maze/randomizer.h"
 
@@ -45,9 +48,15 @@ void render(std::ostream& os, maze::Maze& maze) {
 }
 }  // namespace
 
-int main() {
-  std::mt19937 testgen(123456);
-  maze::Maze my_maze = maze::Prim::RandomizeMaze(17, 38, testgen);
+ABSL_FLAG(int, rows, 2, "Number of rows for maze");
+ABSL_FLAG(int, cols, 2, "Number of cols for maze");
+
+int main(int argc, char* argv[]) {
+  absl::ParseCommandLine(argc, argv);
+  std::random_device rd;
+  std::mt19937 testgen(rd());
+  maze::Maze my_maze = maze::Prim::RandomizeMaze(
+      absl::GetFlag(FLAGS_rows), absl::GetFlag(FLAGS_cols), testgen);
 
   std::cout << "Rows: " << my_maze.GetRows() << " Cols: " << my_maze.GetCols()
             << "\n";

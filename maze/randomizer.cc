@@ -58,7 +58,7 @@ maze::Maze::Graph maze::Prim::ConstructMST(const Maze::Graph& graph) {
     heap.emplace(weight, start_cell, next_cell);
   }
 
-  while (std::ssize(seen_cells) < total_size && seen_cells.size() > 0) {
+  while (std::ssize(seen_cells) < total_size && heap.size() > 0) {
     const auto [cost, from_cell, current_cell] = heap.top();
     heap.pop();
 

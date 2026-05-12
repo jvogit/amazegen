@@ -18,4 +18,5 @@ TEST(MazeTest, IsConnected) {
   EXPECT_EQ(my_maze.GetRows(), expected_cells_side);
   EXPECT_EQ(my_maze.GetCols(), expected_cells_side);
   EXPECT_FALSE(my_maze.IsConnected({0, 0}, {0, 1}));
+  EXPECT_FALSE(my_maze.IsConnected({1, 0}, {0, 0}));
 }

@@ -2,7 +2,7 @@
 
 namespace maze::renderer {
 
-void Render(std::ostream& os, maze::Maze& maze) {
+void Render(std::ostream& os, Maze& maze) {
   CHECK(maze.GetRows() > 0);
   CHECK(maze.GetCols() > 0);
 
@@ -17,20 +17,18 @@ void Render(std::ostream& os, maze::Maze& maze) {
     std::string bottom = "+";
 
     for (int col = 0; col < maze.GetCols(); ++col) {
-      maze::Cell cell = {row, col};
-      maze::Cell cell_right = {row, col + 1};
-      maze::Cell cell_down = {row + 1, col};
+      Cell cell = {row, col};
+      Cell cell_right = {row, col + 1};
+      Cell cell_down = {row + 1, col};
 
-      if (maze::internal::OutOfBounds(cell_right, maze.GetRows(),
-                                      maze.GetCols()) ||
+      if (internal::OutOfBounds(cell_right, maze.GetRows(), maze.GetCols()) ||
           !maze.IsConnected(cell, cell_right)) {
         middle += "   │";
       } else {
         middle += "    ";
       }
 
-      if (maze::internal::OutOfBounds(cell_down, maze.GetRows(),
-                                      maze.GetCols()) ||
+      if (internal::OutOfBounds(cell_down, maze.GetRows(), maze.GetCols()) ||
           !maze.IsConnected(cell, cell_down)) {
         bottom += "───+";
       } else {

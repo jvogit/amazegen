@@ -23,20 +23,22 @@ using MinHeap = std::priority_queue<MinHeapEdge, std::vector<MinHeapEdge>,
 
 namespace maze {
 
-Maze::Graph Prim::ConstructGraph(int rows, int cols) {
-  Maze::Graph graph(rows * cols);
+namespace internal {
+
+Graph ConstructGraph(int rows, int cols) {
+  Graph graph(rows * cols);
 
   for (int row = 0; row < rows; ++row) {
     for (int col = 0; col < cols; ++col) {
       const Cell cell_a = {row, col};
-      int curr_idx = internal::ToFlatIdx(cell_a, cols);
+      int curr_idx = ToFlatIdx(cell_a, cols);
 
       for (const auto [row_delta, col_delta] : kDirections) {
         const Cell cell_b = {row + row_delta, col + col_delta};
 
-        if (internal::OutOfBounds(cell_b, rows, cols)) continue;
+        if (OutOfBounds(cell_b, rows, cols)) continue;
 
-        int next_idx = internal::ToFlatIdx(cell_b, cols);
+        int next_idx = ToFlatIdx(cell_b, cols);
 
         graph[curr_idx].emplace_back(next_idx, 0.0f);
         graph[next_idx].emplace_back(curr_idx, 0.0f);
@@ -47,11 +49,13 @@ Maze::Graph Prim::ConstructGraph(int rows, int cols) {
   return graph;
 }
 
-Maze::Graph Prim::ConstructMST(const Maze::Graph& graph) {
+}  // namespace internal
+
+internal::Graph Prim::ConstructMST(const internal::Graph& graph) {
   const int total_size = graph.size();
   CHECK(total_size > 0);
 
-  Maze::Graph mst(total_size);
+  internal::Graph mst(total_size);
   MinHeap heap;
   const int start_cell = 0;
   std::unordered_set<int> seen_cells = {start_cell};
@@ -81,6 +85,10 @@ Maze::Graph Prim::ConstructMST(const Maze::Graph& graph) {
   CHECK(std::ssize(seen_cells) == total_size);
 
   return mst;
+}
+
+internal::Graph Kruskal::ConstructMST(const internal::Graph& graph) {
+  return graph;
 }
 
 }  // namespace maze

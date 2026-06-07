@@ -21,12 +21,8 @@ class Prim {
   static Maze::Graph ConstructMST(const Maze::Graph& graph);
 };
 
-}  // namespace maze
-
-// template Prim functions
-
 template <std::uniform_random_bit_generator G>
-maze::Maze maze::Prim::RandomizeMaze(int rows, int cols, G& gen) {
+Maze Prim::RandomizeMaze(int rows, int cols, G& gen) {
   Maze maze(rows, cols);
 
   Maze::Graph graph = ConstructGraph(rows, cols);
@@ -39,7 +35,7 @@ maze::Maze maze::Prim::RandomizeMaze(int rows, int cols, G& gen) {
 }
 
 template <std::uniform_random_bit_generator G>
-void maze::Prim::RandomizeEdgeWeights(Maze::Graph& graph, G& gen) {
+void Prim::RandomizeEdgeWeights(Maze::Graph& graph, G& gen) {
   std::uniform_real_distribution<float> distrib(0.0f, 1.0f);
 
   for (auto& edge_list : graph) {
@@ -48,5 +44,7 @@ void maze::Prim::RandomizeEdgeWeights(Maze::Graph& graph, G& gen) {
     }
   }
 }
+
+}  // namespace maze
 
 #endif

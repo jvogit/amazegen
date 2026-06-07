@@ -21,7 +21,9 @@ using MinHeap = std::priority_queue<MinHeapEdge, std::vector<MinHeapEdge>,
 
 }  // namespace
 
-maze::Maze::Graph maze::Prim::ConstructGraph(int rows, int cols) {
+namespace maze {
+
+Maze::Graph Prim::ConstructGraph(int rows, int cols) {
   Maze::Graph graph(rows * cols);
 
   for (int row = 0; row < rows; ++row) {
@@ -45,7 +47,7 @@ maze::Maze::Graph maze::Prim::ConstructGraph(int rows, int cols) {
   return graph;
 }
 
-maze::Maze::Graph maze::Prim::ConstructMST(const Maze::Graph& graph) {
+Maze::Graph Prim::ConstructMST(const Maze::Graph& graph) {
   const int total_size = graph.size();
   CHECK(total_size > 0);
 
@@ -80,3 +82,5 @@ maze::Maze::Graph maze::Prim::ConstructMST(const Maze::Graph& graph) {
 
   return mst;
 }
+
+}  // namespace maze

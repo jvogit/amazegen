@@ -6,6 +6,7 @@ cc_library(
     hdrs = glob(["*.h"]),
     visibility = ["//visibility:public"],
     deps = [
+        "@abseil-cpp//absl/log",
         "@abseil-cpp//absl/log:check",
     ],
 )

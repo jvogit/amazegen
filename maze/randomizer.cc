@@ -42,7 +42,7 @@ class DSU {
       parent_[u_root] = v_root;
     } else {
       parent_[u_root] = v_root;
-      ++rank_[u_root];
+      ++rank_[v_root];
     }
 
     return true;

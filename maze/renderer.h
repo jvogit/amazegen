@@ -7,7 +7,7 @@
 
 namespace maze::renderer {
 
-void Render(std::ostream& os, Maze& maze);
+std::ostream& Render(std::ostream& os, const Maze& maze);
 
 }  // namespace maze::renderer
 

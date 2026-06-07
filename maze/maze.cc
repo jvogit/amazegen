@@ -2,6 +2,9 @@
 
 #include <algorithm>
 
+#include "absl/log/check.h"
+#include "renderer.h"
+
 namespace maze {
 
 namespace internal {
@@ -18,6 +21,15 @@ bool OutOfBounds(const Cell& cell, int total_rows, int total_cols) {
 
 }  // namespace internal
 
+Maze::Maze(int rows, int cols) : rows_(rows), cols_(cols) {
+  CHECK_GE(rows, 0);
+  CHECK_GE(cols, 0);
+
+  graph_.resize(rows * cols);
+
+  CHECK_EQ(graph_.size(), rows * cols);
+};
+
 bool Maze::IsConnected(const Cell& cell_a, const Cell& cell_b) const {
   if (internal::OutOfBounds(cell_a, GetRows(), GetCols()) ||
       internal::OutOfBounds(cell_b, GetRows(), GetCols())) {
@@ -31,6 +43,10 @@ bool Maze::IsConnected(const Cell& cell_a, const Cell& cell_b) const {
                               [cell_b_idx](const auto& edge) {
                                 return std::get<0>(edge) == cell_b_idx;
                               }) != std::ranges::end(graph_[cell_a_idx]);
+}
+
+std::ostream& operator<<(std::ostream& os, const Maze& maze) {
+  return maze::renderer::Render(os, maze);
 }
 
 }  // namespace maze

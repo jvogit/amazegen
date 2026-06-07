@@ -9,7 +9,7 @@
 #include <unordered_set>
 #include <vector>
 
-#include "absl/log/log.h"
+#include "absl/log/check.h"
 #include "maze.h"
 
 namespace {

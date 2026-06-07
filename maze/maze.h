@@ -1,10 +1,8 @@
 #ifndef MAZE_MAZE_H_
 #define MAZE_MAZE_H_
 
-#include <iterator>
+#include <ostream>
 #include <vector>
-
-#include "absl/log/check.h"
 
 namespace maze {
 
@@ -24,18 +22,17 @@ bool OutOfBounds(const Cell& cell, int total_rows, int total_cols);
 // Holds the maze represented as a graph
 class Maze {
  public:
-  explicit Maze(int rows, int cols)
-      : rows_(rows), cols_(cols), graph_(rows * cols) {
-    CHECK_EQ(std::ssize(graph_), rows * cols);
-  };
+  Maze() = default;
+  explicit Maze(int rows, int cols);
 
   int GetRows() const { return rows_; };
   int GetCols() const { return cols_; };
   bool IsConnected(const Cell& cell_a, const Cell& cell_b) const;
+  friend std::ostream& operator<<(std::ostream& os, const Maze& maze);
 
  private:
-  int rows_;
-  int cols_;
+  int rows_ = 0;
+  int cols_ = 0;
   maze::internal::Graph graph_;
 
   friend class Prim;

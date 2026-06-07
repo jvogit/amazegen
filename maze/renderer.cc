@@ -1,8 +1,10 @@
 #include "renderer.h"
 
+#include "absl/log/check.h"
+
 namespace maze::renderer {
 
-void Render(std::ostream& os, Maze& maze) {
+std::ostream& Render(std::ostream& os, const Maze& maze) {
   CHECK(maze.GetRows() > 0);
   CHECK(maze.GetCols() > 0);
 
@@ -38,6 +40,8 @@ void Render(std::ostream& os, Maze& maze) {
 
     os << middle << "\n" << bottom << "\n";
   }
+
+  return os;
 }
 
 }  // namespace maze::renderer

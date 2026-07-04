@@ -27,7 +27,7 @@ Maze::Maze(int rows, int cols) : rows_(rows), cols_(cols) {
 
   graph_.resize(rows * cols);
 
-  CHECK_EQ(graph_.size(), rows * cols);
+  CHECK_EQ(std::ssize(graph_), rows * cols);
 };
 
 bool Maze::IsConnected(const Cell& cell_a, const Cell& cell_b) const {

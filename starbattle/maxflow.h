@@ -1,25 +1,25 @@
 #ifndef STARBATTLE_MAXFLOW_H_
 #define STARBATTLE_MAXFLOW_H_
 
+#include <ostream>
 #include <vector>
 
 namespace starbattle {
 
-namespace internal {
-
 struct Node {
-  int v;
+  size_t v;
   int capacity;
   int flow;
   bool residual;
 };
 
 using Graph = std::vector<std::vector<Node>>;
+using Lookup = std::vector<std::vector<int>>;
 
 class Network {
  public:
   Network(int size) : graph_(Graph(size, std::vector<Node>())) {}
-  void Connect(int u, int v, int capacity);
+  void Connect(size_t u, size_t v, int capacity);
 
  private:
   Graph graph_;
@@ -33,19 +33,20 @@ class FlowNetwork {
 
   int GetMaxFlow() const { return max_flow_; };
 
+  friend std::ostream& operator<<(std::ostream& os,
+                                  const FlowNetwork& flow_network);
+
  private:
   Graph graph_;
+  Lookup lookup_;
   int max_flow_ = 0;
 
   friend class EdmondKarp;
 };
 
-}  // namespace internal
-
 class EdmondKarp {
  public:
-  static internal::FlowNetwork MaxFlow(const internal::Network& network, int s,
-                                       int t);
+  static FlowNetwork MaxFlow(const Network& network, int s, int t);
 };
 
 }  // namespace starbattle

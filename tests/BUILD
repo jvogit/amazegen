@@ -6,6 +6,7 @@ cc_test(
     srcs = glob(["*_test.cc"]),
     deps = [
         "//maze",
+        "//starbattle",
         "@googletest//:gtest_main",
     ],
 )

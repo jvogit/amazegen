@@ -1,4 +1,4 @@
-#include "maze/maze.h"
+#include "maze.h"
 
 #include <algorithm>
 

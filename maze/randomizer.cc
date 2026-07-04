@@ -9,6 +9,7 @@
 #include <unordered_set>
 #include <vector>
 
+#include "absl/container/flat_hash_set.h"
 #include "absl/log/check.h"
 #include "maze.h"
 
@@ -102,7 +103,7 @@ internal::Graph Prim::ConstructMST(const internal::Graph& graph) {
   internal::Graph mst(total_size);
   MinHeap heap;
   const int start_cell = 0;
-  std::unordered_set<int> seen_cells = {start_cell};
+  absl::flat_hash_set<int> seen_cells = {start_cell};
 
   for (const auto [next_cell, weight] : graph[start_cell]) {
     heap.emplace(weight, start_cell, next_cell);

@@ -4,14 +4,22 @@
 #include <array>
 #include <concepts>
 #include <ostream>
+#include <span>
 #include <vector>
 
 namespace maze {
 
 namespace grid {
 
-inline constexpr auto kDirections =
+inline constexpr auto kNoDirections = std::array<std::tuple<int, int>, 0>{};
+inline constexpr auto kFourWayDirections =
+    std::to_array<std::tuple<int, int>>({{0, 1}, {1, 0}, {0, -1}, {-1, 0}});
+inline constexpr auto kFourWayHalfDirections =
     std::to_array<std::tuple<int, int>>({{0, 1}, {1, 0}});
+inline constexpr auto kEightWayDirections = std::to_array<std::tuple<int, int>>(
+    {{0, 1}, {1, 0}, {-1, 1}, {1, 1}, {0, -1}, {-1, 0}, {1, -1}, {-1, -1}});
+inline constexpr auto kEightWayHalfDirections =
+    std::to_array<std::tuple<int, int>>({{0, 1}, {1, 0}, {-1, 1}, {1, 1}});
 
 using Cell = std::tuple<int, int>;
 
@@ -24,10 +32,12 @@ template <GraphEdge Edge>
 using Graph = std::vector<std::vector<Edge>>;
 
 int ToFlatIdx(const Cell& cell, int total_cols);
+Cell FromFlatIdx(int flat_idx, int total_cols);
 bool OutOfBounds(const Cell& cell, int total_rows, int total_cols);
 
 template <GraphEdge Edge>
-grid::Graph<Edge> ConstructGraph(int rows, int cols) {
+grid::Graph<Edge> ConstructGraph(
+    int rows, int cols, std::span<const std::tuple<int, int>> directions) {
   Graph<Edge> graph(rows * cols);
 
   for (int row = 0; row < rows; ++row) {
@@ -35,7 +45,7 @@ grid::Graph<Edge> ConstructGraph(int rows, int cols) {
       const Cell cell_a = {row, col};
       int curr_idx = ToFlatIdx(cell_a, cols);
 
-      for (const auto [row_delta, col_delta] : kDirections) {
+      for (const auto [row_delta, col_delta] : directions) {
         const Cell cell_b = {row + row_delta, col + col_delta};
 
         if (OutOfBounds(cell_b, rows, cols)) continue;
@@ -48,6 +58,11 @@ grid::Graph<Edge> ConstructGraph(int rows, int cols) {
   }
 
   return graph;
+}
+
+template <GraphEdge Edge>
+grid::Graph<Edge> ConstructGraph(int rows, int cols) {
+  return ConstructGraph<Edge>(rows, cols, kFourWayHalfDirections);
 }
 
 }  // namespace grid

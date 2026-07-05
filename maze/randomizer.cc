@@ -113,9 +113,7 @@ grid::Graph<internal::MazeEdge> Kruskal::ConstructMST(
   CHECK(total_size > 0);
   grid::Graph<internal::MazeEdge> mst(total_size);
   std::vector<GraphEdge> edges;
-  // 2 * kDirections.size() since kDirection only right and down moves. Each
-  // cell has 4 possible edges.
-  edges.reserve(2 * grid::kDirections.size() * total_size);
+  edges.reserve(grid::kFourWayDirections.size() * total_size);
 
   for (int from = 0; from < total_size; ++from) {
     for (const auto [to, cst] : graph[from]) {

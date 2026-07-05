@@ -7,6 +7,7 @@ cc_test(
     deps = [
         "//maxflow",
         "//maze",
+        "//starbattle",
         "@googletest//:gtest_main",
     ],
 )

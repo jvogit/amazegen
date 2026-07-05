@@ -14,6 +14,10 @@ int ToFlatIdx(const Cell& cell, int total_cols) {
   return row * total_cols + col;
 }
 
+Cell FromFlatIdx(int flat_idx, int total_cols) {
+  return {flat_idx / total_cols, flat_idx % total_cols};
+}
+
 bool OutOfBounds(const Cell& cell, int total_rows, int total_cols) {
   const auto& [row, col] = cell;
   return row < 0 || row >= total_rows || col < 0 || col >= total_cols;

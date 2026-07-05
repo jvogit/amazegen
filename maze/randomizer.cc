@@ -15,9 +15,6 @@
 
 namespace {
 
-constexpr auto kDirections =
-    std::to_array<std::tuple<int, int>>({{0, 1}, {1, 0}});
-
 // weight, u, v
 using GraphEdge = std::tuple<float, int, int>;
 using MinHeap = std::priority_queue<GraphEdge, std::vector<GraphEdge>,
@@ -68,39 +65,12 @@ class DSU {
 
 namespace maze {
 
-namespace internal {
-
-Graph ConstructGraph(int rows, int cols) {
-  Graph graph(rows * cols);
-
-  for (int row = 0; row < rows; ++row) {
-    for (int col = 0; col < cols; ++col) {
-      const Cell cell_a = {row, col};
-      int curr_idx = ToFlatIdx(cell_a, cols);
-
-      for (const auto [row_delta, col_delta] : kDirections) {
-        const Cell cell_b = {row + row_delta, col + col_delta};
-
-        if (OutOfBounds(cell_b, rows, cols)) continue;
-
-        int next_idx = ToFlatIdx(cell_b, cols);
-
-        graph[curr_idx].emplace_back(next_idx, 0.0f);
-        graph[next_idx].emplace_back(curr_idx, 0.0f);
-      }
-    }
-  }
-
-  return graph;
-}
-
-}  // namespace internal
-
-internal::Graph Prim::ConstructMST(const internal::Graph& graph) {
+grid::Graph<internal::MazeEdge> Prim::ConstructMST(
+    const grid::Graph<internal::MazeEdge>& graph) {
   const int total_size = graph.size();
   CHECK(total_size > 0);
 
-  internal::Graph mst(total_size);
+  grid::Graph<internal::MazeEdge> mst(total_size);
   MinHeap heap;
   const int start_cell = 0;
   absl::flat_hash_set<int> seen_cells = {start_cell};
@@ -132,7 +102,8 @@ internal::Graph Prim::ConstructMST(const internal::Graph& graph) {
   return mst;
 }
 
-internal::Graph Kruskal::ConstructMST(const internal::Graph& graph) {
+grid::Graph<internal::MazeEdge> Kruskal::ConstructMST(
+    const grid::Graph<internal::MazeEdge>& graph) {
   // sort edges by weight
   // connectvity set
   // while edges
@@ -140,11 +111,11 @@ internal::Graph Kruskal::ConstructMST(const internal::Graph& graph) {
   //   add edge to tree, mark both ends as seen
   const int total_size = graph.size();
   CHECK(total_size > 0);
-  internal::Graph mst(total_size);
+  grid::Graph<internal::MazeEdge> mst(total_size);
   std::vector<GraphEdge> edges;
   // 2 * kDirections.size() since kDirection only right and down moves. Each
   // cell has 4 possible edges.
-  edges.reserve(2 * kDirections.size() * total_size);
+  edges.reserve(2 * grid::kDirections.size() * total_size);
 
   for (int from = 0; from < total_size; ++from) {
     for (const auto [to, cst] : graph[from]) {

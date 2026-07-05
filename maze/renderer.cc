@@ -19,18 +19,18 @@ std::ostream& Render(std::ostream& os, const Maze& maze) {
     std::string bottom = "+";
 
     for (int col = 0; col < maze.GetCols(); ++col) {
-      Cell cell = {row, col};
-      Cell cell_right = {row, col + 1};
-      Cell cell_down = {row + 1, col};
+      grid::Cell cell = {row, col};
+      grid::Cell cell_right = {row, col + 1};
+      grid::Cell cell_down = {row + 1, col};
 
-      if (internal::OutOfBounds(cell_right, maze.GetRows(), maze.GetCols()) ||
+      if (grid::OutOfBounds(cell_right, maze.GetRows(), maze.GetCols()) ||
           !maze.IsConnected(cell, cell_right)) {
         middle += "   │";
       } else {
         middle += "    ";
       }
 
-      if (internal::OutOfBounds(cell_down, maze.GetRows(), maze.GetCols()) ||
+      if (grid::OutOfBounds(cell_down, maze.GetRows(), maze.GetCols()) ||
           !maze.IsConnected(cell, cell_down)) {
         bottom += "───+";
       } else {

@@ -2,8 +2,11 @@
 #define STARBATTLE_STARBATTLE_H_
 
 #include <algorithm>
+#include <functional>
 #include <numeric>
+#include <queue>
 #include <random>
+#include <vector>
 
 #include "absl/container/flat_hash_set.h"
 #include "absl/log/check.h"
@@ -21,14 +24,28 @@ struct BoardEdge {
 };
 static_assert(maze::grid::GraphEdge<BoardEdge>);
 
+struct BoardData {
+  int color;
+  bool star;
+};
+
 }  // namespace internal
 
 class Board {
-  explicit Board(maze::grid::Graph<internal::BoardEdge> graph)
-      : graph_(std::move(graph)) {}
+ public:
+  explicit Board(int n, maze::grid::Graph<internal::BoardEdge> graph,
+                 std::vector<internal::BoardData> data)
+      : n_(n), graph_(std::move(graph)), data_(std::move(data)) {}
+
+  const internal::BoardData& GetBoardData(const maze::grid::Cell& cell) const;
+  int GetN() const { return n_; }
+
+  friend std::ostream& operator<<(std::ostream& os, const Board& board);
 
  private:
+  int n_;
   maze::grid::Graph<internal::BoardEdge> graph_;
+  std::vector<internal::BoardData> data_;
 
   friend class BoardRandomizer;
 };
@@ -37,18 +54,21 @@ class BoardRandomizer {
  public:
   template <std::uniform_random_bit_generator G>
   inline static Board GenerateBoard(int n, G& gen) {
-    auto graph = maze::grid::ConstructGraph<internal::BoardEdge>(
-        n, n, maze::grid::kNoDirections);
+    auto graph = maze::grid::ConstructGraph<internal::BoardEdge>(n, n);
 
     // Choose Stars
     std::vector<int> stars;
     absl::flat_hash_set<int> local_seen;
+
     CHECK_EQ(ChooseStars(n, gen, stars, local_seen), true);
     for (int star : stars) {
       auto [star_x, star_y] = maze::grid::FromFlatIdx(star, n);
       LOG(INFO) << star_x << " " << star_y;
     }
-    return Board(std::move(graph));
+
+    auto data = FloodFill(n, graph, stars, gen);
+
+    return Board(n, std::move(graph), std::move(data));
   }
 
  private:
@@ -104,6 +124,47 @@ class BoardRandomizer {
     };
 
     return false;
+  }
+
+  template <std::uniform_random_bit_generator G>
+  inline static std::vector<internal::BoardData> FloodFill(
+      int n, maze::grid::Graph<internal::BoardEdge> graph,
+      std::vector<int> stars, G& gen) {
+    std::vector<internal::BoardData> board_data(
+        n * n, internal::BoardData{.color = -1, .star = false});
+    std::vector<std::vector<int>> queue_of(stars.size());
+
+    for (size_t i = 0; i < stars.size(); ++i) {
+      board_data[stars[i]].star = true;
+      queue_of[i].emplace_back(stars[i]);
+    }
+
+    int next_queue = 0;
+    int colored = 0;
+
+    while (colored < n * n) {
+      // randomly dequeue
+      auto color = next_queue++ % queue_of.size();
+      auto& queue = queue_of[color];
+      if (queue.size() == 0) continue;
+
+      auto random_idx =
+          std::uniform_int_distribution<int>(0, queue.size() - 1)(gen);
+      auto u = queue[random_idx];
+      std::swap(queue[random_idx], queue.back());
+      queue.pop_back();
+
+      if (board_data[u].color != -1) continue;
+      board_data[u].color = color;
+      ++colored;
+
+      for (const auto& edge : graph[u]) {
+        if (board_data[edge.v].color != -1) continue;
+        queue.emplace_back(edge.v);
+      }
+    }
+
+    return board_data;
   }
 };
 }  // namespace starbattle

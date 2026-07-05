@@ -6,7 +6,9 @@
 
 TEST(StarBattleTest, BoardRandomizerGenerateTest) {
   std::mt19937 test_gen(123456);
-  starbattle::BoardRandomizer::GenerateBoard(10, test_gen);
+  auto board = starbattle::BoardRandomizer::GenerateBoard(5, test_gen);
+
+  LOG(INFO) << "\n" << board;
 
   EXPECT_TRUE(true);
 }

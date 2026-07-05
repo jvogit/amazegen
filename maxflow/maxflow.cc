@@ -6,11 +6,10 @@
 #include <vector>
 
 #include "absl/log/check.h"
-#include "absl/log/log.h"
 #include "absl/strings/str_cat.h"
 #include "absl/strings/str_format.h"
 
-namespace starbattle {
+namespace maxflow {
 
 namespace {
 
@@ -98,8 +97,6 @@ FlowNetwork EdmondKarp::MaxFlow(const Network& network, int s, int t) {
     augment_path = AugmentPath(flow_network.graph_, s, t);
   }
 
-  LOG(INFO) << flow_network;
-
   return flow_network;
 }
 
@@ -116,4 +113,4 @@ std::ostream& operator<<(std::ostream& os, const FlowNetwork& flow_network) {
   return os;
 }
 
-}  // namespace starbattle
+}  // namespace maxflow

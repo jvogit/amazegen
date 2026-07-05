@@ -1,10 +1,10 @@
-#ifndef STARBATTLE_MAXFLOW_H_
-#define STARBATTLE_MAXFLOW_H_
+#ifndef MAXFLOW_MAXFLOW_H_
+#define MAXFLOW_MAXFLOW_H_
 
 #include <ostream>
 #include <vector>
 
-namespace starbattle {
+namespace maxflow {
 
 struct Node {
   size_t v;
@@ -49,6 +49,6 @@ class EdmondKarp {
   static FlowNetwork MaxFlow(const Network& network, int s, int t);
 };
 
-}  // namespace starbattle
+}  // namespace maxflow
 
 #endif

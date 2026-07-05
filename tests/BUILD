@@ -5,8 +5,8 @@ cc_test(
     size = "small",
     srcs = glob(["*_test.cc"]),
     deps = [
+        "//maxflow",
         "//maze",
-        "//starbattle",
         "@googletest//:gtest_main",
     ],
 )
